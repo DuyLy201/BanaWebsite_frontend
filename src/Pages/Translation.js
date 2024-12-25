@@ -52,7 +52,7 @@ function Translation() {
     axios
       .post(
         `https://www.ura.hcmut.edu.vn/bahnar/nmt/api/translateBahnar/voice`,
-        { gender: gender, text: searchValue }
+        { gender: gender, text: data }
       ) // update api translation here
       .then((response) => {
         const payload = response.data.payload;

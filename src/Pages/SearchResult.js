@@ -6,6 +6,7 @@ import myImage from "../Assets/Images/Bilingual.jpg";
 import "./SearchResult.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Environments } from "../environment";
 
 function useDebounce(cb, delay) {
   const [debounceValue, setDebounceValue] = useState(cb);
@@ -40,7 +41,7 @@ function SearchResult() {
 
     axios
       .get(
-        `http://127.0.0.1:5000/api/search?searched_word=${debounceValue}&language=${language}`
+        `${Environments.API_URL}/search?searched_word=${debounceValue}&language=${language}`
       )
       .then((response) => {
         setRelatedWords(response.data.results);
@@ -51,7 +52,7 @@ function SearchResult() {
 
     axios
       .get(
-        `http://127.0.0.1:5000/api/related?searched_word=${debounceValue}&language=${language}`
+        `${Environments.API_URL}/related?searched_word=${debounceValue}&language=${language}`
       )
       .then((response) => {
         setRelatedItems(response.data.results);
@@ -71,7 +72,7 @@ function SearchResult() {
   useEffect(() => {
     axios
       .get(
-        `http://127.0.0.1:5000/api/search?searched_word=${selectedItem.tiengViet}&language=${language}`
+        `${Environments.API_URL}/search?searched_word=${selectedItem.tiengViet}&language=${language}`
       )
       .then((response) => {
         setRelatedWords(response.data.results);
@@ -86,7 +87,7 @@ function SearchResult() {
       // Make an API call to fetch related items based on selectedItem.tiengViet
       axios
         .get(
-          `http://127.0.0.1:5000/api/related?searched_word=${selectedItem.tiengViet}&language=${language}`
+          `${Environments.API_URL}/related?searched_word=${selectedItem.tiengViet}&language=${language}`
         )
         .then((response) => {
           setRelatedItems(response.data.results);

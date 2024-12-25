@@ -14,10 +14,19 @@ function Translation() {
   const [gender, setGender] = useState(genders[0]);
   const [data, setData] = useState("");
   const [audioSrc, setAudioSrc] = useState("");
+  const [savedSearch, setSavedSearch] = useState(
+    JSON.parse(localStorage.getItem("savedSearch")) || []
+  );
 
   useEffect(() => {
     setSearchValue("");
   }, [language]);
+
+  const appendSavedSearch = (keyword, translated) => {
+    const newSavedSearch = [...savedSearch, { keyword, translated }];
+    setSavedSearch(newSavedSearch);
+    localStorage.setItem("savedSearch", JSON.stringify(newSavedSearch));
+  };
 
   const handleSearch = (e) => {
     setSearchValue(e.currentTarget.value);
@@ -31,6 +40,7 @@ function Translation() {
       }) // update api translation here
       .then((response) => {
         // console.log("duylh",response.data.payload);
+        appendSavedSearch(searchValue, response.data.payload.tgt);
         setData(response.data.payload.tgt);
       })
       .catch((error) => {
@@ -171,6 +181,39 @@ function Translation() {
           Your browser does not support the audio element.
         </audio>
       )}
+
+      <div style={{ width: "100%", padding: "60px", display: "flex" }}>
+        <div style={{ width: 60 }} />
+        {savedSearch && (
+          <div
+            style={{
+              flex: 1,
+              border: "1px solid black",
+              borderRadius: 16,
+              cursor: "pointer",
+            }}
+          >
+            {savedSearch.map((word, index) => (
+              <div
+                style={{ padding: 20, borderRadius: 16 }}
+                className="saved-item"
+                key={index}
+                onClick={() => {
+                  setSearchValue(word.keyword);
+                  setData(word.translated);
+                }}
+              >
+                <div>{word.keyword}</div>
+                <div style={{ height: 10 }} />
+                <div style={{ color: "gray" }}>{word.translated}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ flex: 1 }} />
+        <div style={{ width: 60 }} />
+      </div>
     </>
   );
 }
